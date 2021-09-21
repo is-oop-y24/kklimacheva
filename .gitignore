@@ -307,6 +307,8 @@ paket-files/
 
 # FAKE - F# Make
 .fake/
+.idea/
+*/.idea/
 
 # CodeRush personal settings
 .cr/personal
