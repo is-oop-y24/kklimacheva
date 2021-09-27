@@ -9,7 +9,14 @@ namespace Isu.Services
         {
             IsCorrect(groupName);
             Name = groupName;
-            CourseNumber = new CourseNumber(Convert.ToInt32(groupName.Substring(Consts.CourseNumberPos, 1)));
+            try
+            {
+                CourseNumber = new CourseNumber(Convert.ToInt32(groupName.Substring(Consts.CourseNumberPos, 1)));
+            }
+            catch (Exception)
+            {
+                throw new CourseNumberException("Invalid course number.");
+            }
         }
 
         public string Name { get; }
@@ -21,7 +28,7 @@ namespace Isu.Services
                 && groupName[Consts.DirectionNumPos] == Consts.DirectionNum
                 && groupName.Length == Consts.GroupNameLength))
             {
-                throw new IsuException("Isn't correct group name");
+                throw new GroupNameException("Isn't correct group name");
             }
         }
     }

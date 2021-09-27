@@ -2,31 +2,22 @@ namespace Isu.Services
 {
     public class Student
     {
-        private readonly int _id;
-        private readonly string _name;
-        private string _studentGroup;
-
         public Student(string groupName, string name)
         {
-            _studentGroup = groupName;
-            _name = name;
-            _id = new IdGenerator().GetId();
+            GroupName = groupName;
+            Name = name;
+            Id = IdGenerator.GetInstance();
         }
 
-        public string Name
-        {
-            get => _name;
-        }
+        public string Name { get; }
 
-        public string GroupName
-        {
-            get => _studentGroup;
-            set => _studentGroup = value;
-        }
+        public string GroupName { get; set; }
 
-        public int Id
+        public IdGenerator Id { get; }
+
+        public int GetId()
         {
-            get => _id;
+            return Id.StudentId;
         }
     }
 }

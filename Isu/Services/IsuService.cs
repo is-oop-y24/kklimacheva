@@ -21,7 +21,7 @@ namespace Isu.Services
             {
                 foreach (Student student in group.Students)
                 {
-                    if (student.Id == id)
+                    if (student.GetId() == id)
                     {
                         return student;
                     }

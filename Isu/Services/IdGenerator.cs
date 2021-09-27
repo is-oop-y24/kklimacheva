@@ -2,12 +2,19 @@ namespace Isu.Services
 {
     public class IdGenerator
     {
-        private static int _studentId = 100000;
-
-        public int GetId()
+        private static IdGenerator _instance;
+        private IdGenerator() { }
+        public int StudentId { get; set; } = 100000;
+        public static IdGenerator GetInstance()
         {
-            _studentId++;
-            return _studentId;
+            if (_instance == null)
+            {
+                _instance = new IdGenerator();
+            }
+
+            _instance.StudentId++;
+
+            return _instance;
         }
     }
 }

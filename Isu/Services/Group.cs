@@ -5,8 +5,7 @@ namespace Isu.Services
 {
     public class Group
     {
-        private GroupName _groupName;
-        private List<Student> _students = new List<Student>();
+        private readonly GroupName _groupName;
 
         public Group(GroupName groupName)
         {
@@ -17,14 +16,11 @@ namespace Isu.Services
 
         public int CourseNumber => _groupName.CourseNumber.GetNumber();
 
-        public List<Student> Students
-        {
-            get { return _students; }
-        }
+        public List<Student> Students { get; } = new List<Student>();
 
         public bool IsFull()
         {
-            return _students.Count == Consts.MaxStudentsPerGroup;
+            return Students.Count == Consts.MaxStudentsPerGroup;
         }
 
         public void AddStudent(Student student)
@@ -34,12 +30,12 @@ namespace Isu.Services
                 throw new IsuException("Group is full. Unable to add new student.");
             }
 
-            _students.Add(student);
+            Students.Add(student);
         }
 
         public void RemoveStudent(Student student)
         {
-            _students.Remove(student);
+            Students.Remove(student);
         }
     }
 }
