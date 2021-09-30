@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using Isu.Tools;
 
 namespace Isu.Services
@@ -6,20 +7,20 @@ namespace Isu.Services
     public class IsuService :
         IIsuService
     {
-        private readonly List<Group> _isu = new List<Group>();
+        private readonly List<Group> _listOfGroups = new List<Group>();
 
         public Student AddStudent(Group group, string name)
         {
-            var newStudent = new Student(group.Name, name);
+            var newStudent = new Student(group.Name.Name, name);
             GetGroupFromIsu(group).AddStudent(newStudent);
             return newStudent;
         }
 
         public Student GetStudent(int id)
         {
-            foreach (Group group in _isu)
+            foreach (Group group in _listOfGroups)
             {
-                foreach (Student student in group.Students)
+                foreach (Student student in group.GetStudents())
                 {
                     if (student.GetId() == id)
                     {
@@ -31,13 +32,13 @@ namespace Isu.Services
             throw new IsuException("No such student ID.");
         }
 
-        public List<Student> FindStudents(GroupName groupName)
+        public ReadOnlyCollection<Student> FindStudents(GroupName groupName)
         {
-            foreach (Group group in _isu)
+            foreach (Group group in _listOfGroups)
             {
-                if (group.Name == groupName.Name)
+                if (group.Name.Equals(groupName))
                 {
-                    return group.Students;
+                    return group.GetStudents();
                 }
             }
 
@@ -47,11 +48,11 @@ namespace Isu.Services
         public List<Student> FindStudents(CourseNumber courseNumber)
         {
             var students = new List<Student>();
-            foreach (Group group in _isu)
+            foreach (Group group in _listOfGroups)
             {
                 if (group.CourseNumber == courseNumber.GetNumber())
                 {
-                    students.AddRange(group.Students);
+                    students.AddRange(group.GetStudents());
                 }
             }
 
@@ -60,9 +61,9 @@ namespace Isu.Services
 
         public Student FindStudent(string name)
         {
-            foreach (Group group in _isu)
+            foreach (Group group in _listOfGroups)
             {
-                foreach (Student student in group.Students)
+                foreach (Student student in group.GetStudents())
                 {
                     if (student.Name == name)
                     {
@@ -77,15 +78,15 @@ namespace Isu.Services
         public Group AddGroup(string name)
         {
             var newGroup = new Group(new GroupName(name));
-            _isu.Add(newGroup);
+            _listOfGroups.Add(newGroup);
             return newGroup;
         }
 
         public Group FindGroup(GroupName groupName)
         {
-            foreach (Group group in _isu)
+            foreach (Group group in _listOfGroups)
             {
-                if (group.Name == groupName.Name)
+                if (group.Name.Equals(groupName))
                 {
                     return group;
                 }
@@ -97,7 +98,7 @@ namespace Isu.Services
         public List<Group> FindGroups(CourseNumber courseNumber)
         {
             var groups = new List<Group>();
-            foreach (Group group in _isu)
+            foreach (Group group in _listOfGroups)
             {
                 if (group.CourseNumber == courseNumber.GetNumber())
                 {
@@ -115,24 +116,29 @@ namespace Isu.Services
                 throw new IsuException("Error, group is full!");
             }
 
-            foreach (Group group in _isu)
+            foreach (Group group in _listOfGroups)
             {
-                if (group.Name == student.GroupName)
+                if (group.Name.Name == student.GroupName)
                 {
                     group.RemoveStudent(student);
                 }
-                else if (group.Name == newGroup.Name)
+                else if (group.Name.Equals(newGroup.Name))
                 {
                     group.AddStudent(student);
                 }
             }
 
-            student.GroupName = newGroup.Name;
+            student.GroupName = newGroup.Name.Name;
         }
 
         private Group GetGroupFromIsu(Group group)
         {
-            return _isu[_isu.IndexOf(group)];
+            if (_listOfGroups.IndexOf(group) == -1)
+            {
+                throw new GroupOutOfRange("Group doesn't exist.");
+            }
+
+            return _listOfGroups[_listOfGroups.IndexOf(group)];
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace Isu.Services
 {
@@ -8,7 +9,7 @@ namespace Isu.Services
         Student AddStudent(Group group, string name);
         Student GetStudent(int id);
         Student FindStudent(string name);
-        List<Student> FindStudents(GroupName groupName);
+        ReadOnlyCollection<Student> FindStudents(GroupName groupName);
         List<Student> FindStudents(CourseNumber courseNumber);
         Group FindGroup(GroupName groupName);
         List<Group> FindGroups(CourseNumber courseNumber);

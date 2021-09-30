@@ -12,9 +12,12 @@ namespace Isu.Services
                 _instance = new IdGenerator();
             }
 
-            _instance.StudentId++;
-
             return _instance;
+        }
+
+        public int CreateStudentId()
+        {
+            return _instance.StudentId++;
         }
     }
 }

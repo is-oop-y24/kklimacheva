@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using Isu.Tools;
 
 namespace Isu.Services
@@ -6,21 +7,25 @@ namespace Isu.Services
     public class Group
     {
         private readonly GroupName _groupName;
+        private List<Student> _students = new List<Student>();
 
         public Group(GroupName groupName)
         {
             _groupName = groupName;
         }
 
-        public string Name => _groupName.Name;
+        public GroupName Name => _groupName;
 
         public int CourseNumber => _groupName.CourseNumber.GetNumber();
 
-        public List<Student> Students { get; } = new List<Student>();
-
         public bool IsFull()
         {
-            return Students.Count == Consts.MaxStudentsPerGroup;
+            return _students.Count == Consts.MaxStudentsPerGroup;
+        }
+
+        public ReadOnlyCollection<Student> GetStudents()
+        {
+            return _students.AsReadOnly();
         }
 
         public void AddStudent(Student student)
@@ -30,12 +35,12 @@ namespace Isu.Services
                 throw new IsuException("Group is full. Unable to add new student.");
             }
 
-            Students.Add(student);
+            _students.Add(student);
         }
 
         public void RemoveStudent(Student student)
         {
-            Students.Remove(student);
+            _students.Remove(student);
         }
     }
 }

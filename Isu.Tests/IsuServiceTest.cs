@@ -20,7 +20,7 @@ namespace Isu.Tests
             string groupName = "M3204";
             Group newGroup = _isuService.AddGroup(groupName);
             Student newStudent = _isuService.AddStudent(newGroup, "Kate Klimacheva");
-            if (newStudent.GroupName != groupName && newGroup.Students.IndexOf(newStudent) == -1)
+            if (newStudent.GroupName != groupName && newGroup.GetStudents().IndexOf(newStudent) == -1)
             {
                 Assert.Fail();
             }
