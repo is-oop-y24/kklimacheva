@@ -307,6 +307,10 @@ paket-files/
 
 # FAKE - F# Make
 .fake/
+*/.idea/**/indexLayout.xml
+*/.idea/**/modules.xml
+*/.idea/**/riderModule.iml
+
 
 # CodeRush personal settings
 .cr/personal

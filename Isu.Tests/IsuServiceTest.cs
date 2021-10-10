@@ -11,14 +11,19 @@ namespace Isu.Tests
         [SetUp]
         public void Setup()
         {
-            //TODO: implement
-            _isuService = null;
+            _isuService = new IsuService();
         }
 
         [Test]
         public void AddStudentToGroup_StudentHasGroupAndGroupContainsStudent()
         {
-            Assert.Fail();
+            string groupName = "M3204";
+            Group newGroup = _isuService.AddGroup(groupName);
+            Student newStudent = _isuService.AddStudent(newGroup, "Kate Klimacheva");
+            if (newStudent.GroupName != groupName && newGroup.GetStudents().IndexOf(newStudent) == -1)
+            {
+                Assert.Fail();
+            }
         }
 
         [Test]
@@ -26,7 +31,13 @@ namespace Isu.Tests
         {
             Assert.Catch<IsuException>(() =>
             {
-                
+                Group newGroup = _isuService.AddGroup("M3204");
+                Student newStudent = _isuService.AddStudent(newGroup, "Kate Klimacheva");
+                for (int i = 0; i < Consts.MaxStudentsPerGroup; ++i)
+                {
+                    newGroup.AddStudent(newStudent);
+                }
+                newGroup.AddStudent(newStudent);
             });
         }
 
@@ -35,7 +46,7 @@ namespace Isu.Tests
         {
             Assert.Catch<IsuException>(() =>
             {
-
+                _isuService.AddStudent(_isuService.AddGroup("N3204"), "Kate Klimacheva");
             });
         }
 
@@ -44,7 +55,14 @@ namespace Isu.Tests
         {
             Assert.Catch<IsuException>(() =>
             {
-
+                Group currentStudentGroup = _isuService.AddGroup("M3204");
+                Student newStudent = _isuService.AddStudent(currentStudentGroup, "Kate Klimacheva");
+                Group newGroup = _isuService.AddGroup("M3205");
+                for (int i = 0; i < Consts.MaxStudentsPerGroup; ++i)
+                {
+                    newGroup.AddStudent(newStudent);
+                }
+                _isuService.ChangeStudentGroup(newStudent, newGroup);
             });
         }
     }
