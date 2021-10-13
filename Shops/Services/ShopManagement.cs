@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 using Shops.Tools;
 
 namespace Shops.Services
@@ -16,20 +15,21 @@ namespace Shops.Services
             return newShop;
         }
 
-        public void CustomerMakePurchase(Customer customer, Shop shop, Product product, int amount)
+        public void CustomerMakePurchase(Customer customer, Shop shop, ShopProduct product, int amount)
         {
             if (!IsShopInDatabase(shop))
             {
                 throw new ShopsException("No such shop in database.");
             }
 
-            if (shop.IsInCatalog(product))
+            if (shop.IsInCatalog(product.ProductInstance))
             {
                 throw new ProductExistenceException("No such product in catalog.");
             }
 
-            customer.BuyProduct(shop.FindProduct(product), amount);
-            shop.FindProduct(product).Amount -= amount;
+            var handler = new PurchaseHandler();
+            handler.CustomerPurchaseHandler(customer, product, amount);
+            handler.ChangeAmountAfterPurchase(product, amount);
         }
 
         public void AddProduct(Shop shop, Product product, int amount, float price)
@@ -63,36 +63,42 @@ namespace Shops.Services
             }
         }
 
-        public ShopProduct FindProductWithMinPrice()
+        public Shop FindShopWithCheapestProduct()
         {
-            float min = float.MaxValue;
-            ShopProduct foundProduct = null;
-            foreach (ShopProduct product in from shop in _database
-                from product in shop.GetCatalog()
-                where product.Price < min
-                select product)
+            float minPrice = float.MaxValue;
+            Shop foundShop = null;
+            foreach (Shop shop in _database)
             {
-                min = product.Price;
-                foundProduct = product;
+                foreach (ShopProduct product in shop.GetCatalog())
+                {
+                    if (product.Price < minPrice)
+                    {
+                        minPrice = product.Price;
+                        foundShop = shop;
+                    }
+                }
             }
 
-            return foundProduct;
+            return foundShop;
         }
 
-        public ShopProduct FindProductWithMaxPrice()
+        public Shop FindShopWithMostExpensiveProduct()
         {
-            float max = float.MinValue;
-            ShopProduct foundProduct = null;
-            foreach (ShopProduct product in from shop in _database
-                from product in shop.GetCatalog()
-                where product.Price > max
-                select product)
+            float maxPrice = float.MinValue;
+            Shop foundShop = null;
+            foreach (Shop shop in _database)
             {
-                max = product.Price;
-                foundProduct = product;
+                foreach (ShopProduct product in shop.GetCatalog())
+                {
+                    if (product.Price > maxPrice)
+                    {
+                        maxPrice = product.Price;
+                        foundShop = shop;
+                    }
+                }
             }
 
-            return foundProduct;
+            return foundShop;
         }
 
         public Customer CreateNewCustomer(string name, int balance)

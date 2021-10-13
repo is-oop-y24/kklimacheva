@@ -51,15 +51,7 @@ namespace Shops.Services
 
         public void AddProduct(Product newProduct, int amount, float price)
         {
-            var newShopProduct = new ShopProduct(newProduct, amount, price);
-            if (IsInCatalog(newProduct))
-            {
-                int newAmount = FindProduct(newProduct).Amount + newShopProduct.Amount;
-                FindProduct(newProduct).Amount = newAmount;
-                return;
-            }
-
-            _catalog.Add(newShopProduct);
+            AddProduct(new ShopProduct(newProduct, amount, price));
         }
 
         public bool IsInCatalog(Product product)
@@ -74,12 +66,7 @@ namespace Shops.Services
 
         public ShopProduct FindProduct(ShopProduct product)
         {
-            if (!IsInCatalog(product.ProductInstance))
-            {
-                return null;
-            }
-
-            return _catalog[_catalog.IndexOf(product)];
+            return _catalog.FirstOrDefault(shopProduct => shopProduct.Equals(product));
         }
 
         private bool Equals(Shop other)

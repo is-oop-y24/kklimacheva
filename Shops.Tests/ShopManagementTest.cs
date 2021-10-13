@@ -6,7 +6,7 @@ namespace Shops.Tests
 {
     public class Tests
     {
-        private IShopManagement _shopManager;
+        private IShopManagement  _shopManager;
 
         [SetUp]
         public void Setup()
@@ -22,8 +22,9 @@ namespace Shops.Tests
                 Customer newCustomer = _shopManager.CreateNewCustomer("Taylor Swift", 120);
                 var newShop = new Shop("ITMO.Store", "Kronverkskiy 49");
                 var newProduct = new Product("Guitar");
-                _shopManager.AddProduct(newShop, newProduct, 20, 1989);
-                _shopManager.CustomerMakePurchase(newCustomer,newShop,newProduct,10);
+                var newShopProduct = new ShopProduct(newProduct, 20, 1989);
+                newShop.AddProduct(newShopProduct);
+                _shopManager.CustomerMakePurchase(newCustomer,newShop,newShopProduct,10);
             });
         }
         
@@ -38,7 +39,7 @@ namespace Shops.Tests
                 var newShopProduct = new ShopProduct(newProduct, 20, 10);
                 int amountBeforePurchase = newShopProduct.Amount;
                 newShop.AddProduct(newShopProduct);
-                _shopManager.CustomerMakePurchase(newCustomer, newShop, newProduct, 5);
+                _shopManager.CustomerMakePurchase(newCustomer, newShop, newShopProduct, 5);
                 if (amountBeforePurchase != newShopProduct.Amount)
                 {
                     Assert.Fail();
@@ -66,7 +67,7 @@ namespace Shops.Tests
                 var newProduct = new Product("Orange juice");
                 var newShopProduct = new ShopProduct(newProduct, 30, 20);
                 newShop.AddProduct(newShopProduct);
-                _shopManager.CustomerMakePurchase(newCustomer,newShop,newProduct,50);
+                _shopManager.CustomerMakePurchase(newCustomer,newShop,newShopProduct,50);
             });
         }
     }
