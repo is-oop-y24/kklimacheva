@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using Shops.Tools;
 
 namespace Shops.Services
@@ -7,6 +8,7 @@ namespace Shops.Services
     public class ShopManagement : IShopManagement
     {
         private readonly List<Shop> _database = new List<Shop>();
+        private readonly List<Product> _productsDatabase = new List<Product>();
 
         public Shop AddShop(string name, string address)
         {
@@ -27,9 +29,21 @@ namespace Shops.Services
                 throw new ProductExistenceException("No such product in catalog.");
             }
 
-            var handler = new PurchaseHandler();
-            handler.CustomerPurchaseHandler(customer, product, amount);
-            handler.ChangeAmountAfterPurchase(product, amount);
+            PurchaseHandler.CustomerPurchaseHandler(customer, product, amount);
+            PurchaseHandler.ChangeAmountAfterPurchase(product, amount);
+        }
+
+        public Product RegisterProduct(string productName)
+        {
+            var newProduct = new Product(productName);
+            _productsDatabase.Add(newProduct);
+            return newProduct;
+        }
+
+        public void AddProductFromDatabase(Shop shop, Product product, int amount, float price)
+        {
+            Product prod = GetProductFromDatabase(product.Id);
+            shop.AddProduct(prod, amount, price);
         }
 
         public void AddProduct(Shop shop, Product product, int amount, float price)
@@ -39,7 +53,7 @@ namespace Shops.Services
                 throw new ShopsException("No such shop in database.");
             }
 
-            _database[_database.IndexOf(shop)].AddProduct(product, amount, price);
+            shop.AddProduct(product, amount, price);
         }
 
         public void DeliverProducts(Shop shop, ReadOnlyCollection<ShopProduct> productList)
@@ -61,6 +75,16 @@ namespace Shops.Services
                     GetShopFromDatabase(shop).AddProduct(newProduct.ProductInstance, newProduct.Amount, newProduct.Price);
                 }
             }
+        }
+
+        public Product GetProductFromDatabase(int productId)
+        {
+            foreach (Product product in _productsDatabase.Where(product => product.Id == productId))
+            {
+                return product;
+            }
+
+            throw new ProductExistenceException("No such product in database");
         }
 
         public Shop FindShopWithCheapestProduct()

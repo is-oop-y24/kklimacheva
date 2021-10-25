@@ -19,12 +19,23 @@ namespace Shops.Tests
         {
             Assert.Catch<ShopsException>(() =>
             {
-                Customer newCustomer = _shopManager.CreateNewCustomer("Taylor Swift", 120);
+                Customer newCustomer = _shopManager.CreateNewCustomer("Taylor Swift", 1400);
                 var newShop = new Shop("ITMO.Store", "Kronverkskiy 49");
                 var newProduct = new Product("Guitar");
                 var newShopProduct = new ShopProduct(newProduct, 20, 1989);
                 newShop.AddProduct(newShopProduct);
                 _shopManager.CustomerMakePurchase(newCustomer,newShop,newShopProduct,10);
+            });
+        }
+        
+        [Test]
+        public void GetProductFromDatabase_ProductDoesntExist_ThrowException()
+        {
+            Assert.Catch<ShopsException>(() =>
+            {
+                var newProduct = new Product("Coca-Cola");
+                _shopManager.RegisterProduct("Pepsi");
+                _shopManager.GetProductFromDatabase(newProduct.Id);
             });
         }
         

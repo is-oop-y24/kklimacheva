@@ -4,7 +4,7 @@ namespace Shops.Services
 {
     public class PurchaseHandler
     {
-        public void CustomerPurchaseHandler(Customer customer, ShopProduct product, int amount)
+        public static void CustomerPurchaseHandler(Customer customer, ShopProduct product, int amount)
         {
             if (product.Price * amount > customer.Balance)
             {
@@ -20,7 +20,7 @@ namespace Shops.Services
             customer.AddProductToCart(new CartProduct(product.ProductInstance, amount));
         }
 
-        public void ChangeAmountAfterPurchase(ShopProduct product, int amount)
+        public static void ChangeAmountAfterPurchase(ShopProduct product, int amount)
         {
             product.Amount -= amount;
         }

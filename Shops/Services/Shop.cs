@@ -56,7 +56,7 @@ namespace Shops.Services
 
         public bool IsInCatalog(Product product)
         {
-            return _catalog.Any(shopProduct => shopProduct.ProductInstance.Equals(product));
+            return FindProduct(product) != null;
         }
 
         public ShopProduct FindProduct(Product product)

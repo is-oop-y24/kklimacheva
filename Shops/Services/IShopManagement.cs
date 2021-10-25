@@ -11,5 +11,8 @@ namespace Shops.Services
         void AddProduct(Shop shop, Product product, int amount, float price);
         Shop FindShopWithMostExpensiveProduct();
         Shop FindShopWithCheapestProduct();
+        Product RegisterProduct(string productName);
+        void AddProductFromDatabase(Shop shop, Product product, int amount, float price);
+        Product GetProductFromDatabase(int id);
     }
 }
