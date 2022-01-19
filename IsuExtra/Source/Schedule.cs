@@ -1,18 +1,17 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using IsuExtra.Tools;
 
-namespace IsuExtra
+namespace IsuExtra.Source
 {
     public class Schedule
     {
-        private Dictionary<Weekday, List<Lesson>> _schedule = new Dictionary<Weekday, List<Lesson>>();
+        private Dictionary<DayOfWeek, List<Lesson>> _schedule = new Dictionary<DayOfWeek, List<Lesson>>();
 
         public Schedule() { }
 
-        public void AddLesson(Weekday weekday, Lesson lesson)
+        public void AddLesson(DayOfWeek weekday, Lesson lesson)
         {
             if (!_schedule.ContainsKey(weekday))
             {
@@ -28,8 +27,8 @@ namespace IsuExtra
 
         public bool HasLessonCoincidence(Schedule other)
         {
-            Array weekdays = Enum.GetValues(typeof(Weekday));
-            return (from Weekday day in weekdays
+            Array weekdays = Enum.GetValues(typeof(DayOfWeek));
+            return (from DayOfWeek day in weekdays
                 where _schedule.ContainsKey(day) && other.GetSchedule().ContainsKey(day)
                 from lesson in _schedule[day]
                 from lesson1 in other._schedule[day]
@@ -37,19 +36,17 @@ namespace IsuExtra
                 select lesson).Any();
         }
 
-        public void RemoveLesson(Weekday weekday, Lesson lesson)
+        public void RemoveLesson(DayOfWeek weekday, Lesson lesson)
         {
             if (!_schedule.ContainsKey(weekday))
             {
                 throw new ScheduleException("There are no classes on this day.");
             }
-            else
-            {
-                _schedule[weekday].Remove(lesson);
-            }
+
+            _schedule[weekday].Remove(lesson);
         }
 
-        public Dictionary<Weekday, List<Lesson>> GetSchedule()
+        public Dictionary<DayOfWeek, List<Lesson>> GetSchedule()
         {
             return _schedule;
         }

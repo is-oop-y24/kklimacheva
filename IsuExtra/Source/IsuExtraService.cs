@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Isu.Services;
+using IsuExtra.Source;
 using IsuExtra.Tools;
 
 namespace IsuExtra
@@ -44,12 +45,7 @@ namespace IsuExtra
                     "Can't add student to this elective course.Reached max amount of courses per student.");
             }
 
-            var studentSchedule = new Schedule();
-            foreach (GroupExtra group in _groups.Where(group => group.GroupInstance().GetStudents().Contains(student)))
-            {
-                studentSchedule = group.Schedule();
-                break;
-            }
+            Schedule studentSchedule = _groups.Where(group => group.GroupInstance().GetStudents().Contains(student)).Select(group => group.Schedule()).FirstOrDefault();
 
             Stream stream1 = null;
             foreach (Stream stream in course.Streams())

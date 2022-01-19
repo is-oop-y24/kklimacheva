@@ -1,6 +1,6 @@
-namespace IsuExtra
+namespace IsuExtra.Source
 {
-    public enum Weekday : int
+    public enum DayOfWeek : int
     {
         Monday,
         Tuesday,

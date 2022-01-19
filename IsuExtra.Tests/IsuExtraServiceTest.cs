@@ -1,4 +1,5 @@
 using Isu.Services;
+using IsuExtra.Source;
 using IsuExtra.Tools;
 using NUnit.Framework;
 
@@ -34,7 +35,7 @@ namespace IsuExtra.Tests
                 var newGroup = new Group(new GroupName("M3204"));
                 var newSchedule = new Schedule();
                 var newLesson = new Lesson("English", 1, 3202, new Teacher("Josh O."));
-                newSchedule.AddLesson(Weekday.Friday, newLesson);
+                newSchedule.AddLesson(DayOfWeek.Friday, newLesson);
                 var newExtraGroup = new GroupExtra(newGroup, newSchedule);
                 newExtraGroup.AddStudent(student);
                 ElectiveCourse newElective = _isuExtraService.AddNewCourse("Calculus", 'I');
@@ -59,13 +60,13 @@ namespace IsuExtra.Tests
                 var newSchedule = new Schedule();
                 var newLesson1 = new Lesson("OOP", 1, 230, new Teacher("Alex B."));
                 var newLesson2 = new Lesson("Maths", 2, 466, new Teacher("Anna V."));
-                newSchedule.AddLesson(Weekday.Friday, newLesson1);
-                newSchedule.AddLesson(Weekday.Monday, newLesson2);
+                newSchedule.AddLesson(DayOfWeek.Friday, newLesson1);
+                newSchedule.AddLesson(DayOfWeek.Monday, newLesson2);
                 var courseSchedule = new Schedule();
                 GroupExtra newExtraGroup = _isuExtraService.AddNewGroup(newGroup, newSchedule);
                 _isuExtraService.AddStudentToGroup(student, newExtraGroup);
                 var lesson3 = new Lesson("Linear algebra", 2, 348, new Teacher("Maria M."));
-                courseSchedule.AddLesson(Weekday.Monday, lesson3);
+                courseSchedule.AddLesson(DayOfWeek.Monday, lesson3);
                 ElectiveCourse newElective = _isuExtraService.AddNewCourse("Calculus", 'I');
                 newElective.AddStream(new Stream(courseSchedule));
                 _isuExtraService.AddStudentToCourse(student, newElective);
