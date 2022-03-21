@@ -2,6 +2,6 @@ namespace BackupsExtra
 {
     public interface ILogger
     {
-        void Log(string message, bool timeNeeded);
+        public void Log(string message);
     }
 }

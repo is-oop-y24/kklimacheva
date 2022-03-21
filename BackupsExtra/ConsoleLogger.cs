@@ -4,11 +4,9 @@ namespace BackupsExtra
 {
     public class ConsoleLogger : ILogger
     {
-        public ConsoleLogger() { }
-
-        public void Log(string message, bool timeNeeded)
+        public void Log(string message)
         {
-            Console.WriteLine(timeNeeded ? DateTime.Now + " - " + message : message);
+            Console.WriteLine(DateTime.Now + " " + message);
         }
     }
 }
