@@ -6,33 +6,22 @@ namespace Backups
     public class RestorePoint
     {
         private DateTime _creationTime;
-        private List<string> _filesList;
+        private List<string> _files;
 
-        public RestorePoint(List<string> copiesList)
+        public RestorePoint(List<string> files)
         {
             _creationTime = DateTime.Now;
-            _filesList = copiesList;
+            _files = files;
         }
 
-        public RestorePoint(DateTime creationTime, List<string> files)
+        public IReadOnlyList<string> Files()
         {
-            _creationTime = creationTime;
-            _filesList = files;
+            return _files;
         }
 
         public DateTime CreationTime()
         {
             return _creationTime;
-        }
-
-        public IReadOnlyList<string> FilesList()
-        {
-            return _filesList;
-        }
-
-        public void AddFile(string filePath)
-        {
-            _filesList.Add(filePath);
         }
     }
 }
