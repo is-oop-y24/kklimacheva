@@ -18,7 +18,7 @@ namespace Backups.Tests
         {
             var obj1 = new JobObject("C:\\Users\\kklimacheva\\FilesToAdd\\a.txt");
             var obj2 = new JobObject("C:\\Users\\kklimacheva\\FilesToAdd\\b.txt");
-            List<JobObject> objects = new();
+            var objects = new List<JobObject>();
             objects.Add(obj1);
             objects.Add(obj2);
             IStorageAlgorithm type = new SplitStorage(_newRepo);
