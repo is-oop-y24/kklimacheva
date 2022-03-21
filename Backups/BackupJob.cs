@@ -1,31 +1,25 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Backups
 {
     public class BackupJob
     {
-        private IStorageAlgorithmType _algorithmType;
-        private List<string> _filesToBackup;
-        private List<RestorePoint> _points = new ();
+        private List<RestorePoint> _points = new List<RestorePoint>();
+        private List<JobObject> _jobObjects;
 
-        public BackupJob(string name, IStorageAlgorithmType algorithmType, List<string> files)
+        public BackupJob(string name, List<JobObject> jobObjects)
         {
             Name = name;
-            _algorithmType = algorithmType;
-            _filesToBackup = files;
+            _jobObjects = jobObjects;
         }
 
         public string Name { get; }
 
-        public void AddObject(string objectPath)
+        public void AddRestorePoint(RestorePoint newPoint)
         {
-            _filesToBackup.Add(objectPath);
-        }
-
-        public IReadOnlyList<string> Objects()
-        {
-            return _filesToBackup;
+            _points.Add(newPoint);
         }
 
         public IReadOnlyList<RestorePoint> Points()
@@ -33,27 +27,38 @@ namespace Backups
             return _points;
         }
 
-        public void RemoveObject(string objectPath)
+        public IReadOnlyList<JobObject> JobObjects()
         {
-            if (_filesToBackup.Contains(objectPath))
+            return _jobObjects;
+        }
+
+        public void DeleteRestorePoint(DateTime creationTime)
+        {
+            foreach (var point in _points.Where(point => point.CreationTime().Equals(creationTime)))
             {
-                _filesToBackup.Remove(objectPath);
+                _points.Remove(point);
             }
         }
 
-        public void StartJob(Repository repository)
+        public void DeleteRestorePoint(RestorePoint point)
         {
-            _points.Add(_algorithmType.Backup(repository, _filesToBackup, DateTime.Now.Millisecond.ToString()));
+            if (_points.Contains(point))
+            {
+                _points.Remove(point);
+            }
         }
 
-        public void RemovePoint(RestorePoint point)
+        public void AddJobObject(JobObject jobObject)
         {
-            _points.Remove(point);
+            _jobObjects.Add(jobObject);
         }
 
-        private RestorePoint AddRestorePoint(List<string> files)
+        public void RemoveJobObject(JobObject jobObject)
         {
-            return new RestorePoint(files);
+            if (_jobObjects.Contains(jobObject))
+            {
+                _jobObjects.Remove(jobObject);
+            }
         }
     }
 }

@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.IO;
 
 namespace Backups
 {
@@ -7,17 +6,17 @@ namespace Backups
     {
         private static void Main()
         {
-            const string repositoryPath = "C:\\Users\\kklimacheva\\Desktop\\TestFolder";
-            var repo = new Repository(repositoryPath);
-            Directory.CreateDirectory(repositoryPath);
-            var paths = new List<string>()
-            {
-                "C:\\Users\\kklimacheva\\Desktop\\Source\\Test_1.txt",
-                "C:\\Users\\kklimacheva\\Desktop\\Source\\Test_2.txt",
-            };
-            IStorageAlgorithmType algo = new SplitStorageAlgorithm(new FileSystemSaver());
-            var newJob = new BackupJob("Job", algo, paths);
-            newJob.StartJob(repo);
+            const string repositoryPath = "C:\\Users\\kklimacheva\\Repository";
+            LocalRepository rep = new LocalRepository(repositoryPath);
+            var obj1 = new JobObject("C:\\Users\\kklimacheva\\FilesToAdd\\a.txt");
+            var obj2 = new JobObject("C:\\Users\\kklimacheva\\FilesToAdd\\b.txt");
+            List<JobObject> objects = new List<JobObject>();
+            objects.Add(obj1);
+            objects.Add(obj2);
+            IStorageAlgorithm type = new SplitStorage(rep);
+            var newJob = new BackupJob("job1", objects);
+            var manager = new BackupManager(newJob, type, rep);
+            manager.StartBackup();
         }
     }
 }
