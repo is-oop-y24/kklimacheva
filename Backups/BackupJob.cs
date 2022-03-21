@@ -6,7 +6,7 @@ namespace Backups
 {
     public class BackupJob
     {
-        private List<RestorePoint> _points = new ();
+        private List<RestorePoint> _points = new List<RestorePoint>();
         private List<JobObject> _jobObjects;
 
         public BackupJob(string name, List<JobObject> jobObjects)

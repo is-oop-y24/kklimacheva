@@ -4,7 +4,7 @@ namespace Backups
 {
     public class Storage
     {
-        private List<string> _files = new ();
+        private List<string> _files = new List<string>();
 
         public Storage(string path)
         {
